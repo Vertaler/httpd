@@ -1,12 +1,12 @@
 package server
 
-type status struct {
+type http_status struct {
 	message string
 	code    int
 }
 
 var (
-	STATUSES = map[string]status{
+	STATUSES = map[string] http_status{
 		"ok":              {message: "200 OK", code: 200},
 		"not_found":       {message: "404 NOT FOUND", code: 404},
 		"bad_request":     {message: "400 BAD REQUEST", code: 400},
@@ -36,4 +36,5 @@ const (
 	HEADERS_END         string = STRING_SEPARATOR + STRING_SEPARATOR
 	HTTP_VERSION        string = "HTTP/1.1"
 	SERVER              string = "https://github.com/Vertaler/httpd"
+	INDEX_FILE	    string = "/index.html"
 )

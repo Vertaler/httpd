@@ -12,10 +12,16 @@ type http_request struct {
 	http_version string
 	request_url *url.URL
 }
+func (request *http_request) get_path() string{
+	return request.request_url.Path
+}
+func (request *http_request) set_path(new_path string ){
+	request.request_url.Path = new_path
+}
 func (server *Server) parse_request(request string) (*http_request, bool) {
 	parsed_request := http_request{}
-	end_of_first_string := strings.IndexAny(request, STRING_SEPARATOR)
-	end_of_headers := strings.IndexAny(request, HEADERS_END)
+	end_of_first_string := strings.Index(request, STRING_SEPARATOR)
+	end_of_headers := strings.Index(request, HEADERS_END)
 	if end_of_first_string < 0 || end_of_headers < 0 {
 		return nil, false
 	}
@@ -40,5 +46,4 @@ func  (server *Server)parse_start_string(start_string string, request *http_requ
 	}
 	request.request_url = parsed_url
 	return true
-
 }
