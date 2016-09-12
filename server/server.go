@@ -2,7 +2,7 @@ package server
 
 import (
 	"net"
-	//"encoding/gob"
+	//"encoding/gob" //TODO
 	"fmt"
 	"runtime"
 )
@@ -39,6 +39,10 @@ func (server *Server) Start(){
 }
 func (server *Server)handle_connection (connection net.Conn){
 	defer connection.Close()
+	defer func() {
+		str := recover()
+		fmt.Println(str)
+	}()
 	buffer := make([]byte, 1024)
 	_, err := connection.Read(buffer)
 	if err != nil{

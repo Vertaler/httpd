@@ -28,7 +28,7 @@ func (response *http_response) to_byte() []byte{
 	var result bytes.Buffer
 	result.WriteString(HTTP_VERSION + " " + response.status.message + "\n" )
 	for key, value := range response.headers{
-		result.WriteString(key + ": " + value)
+		result.WriteString(key + ": " + value + STRING_SEPARATOR)
 	}
 	result.WriteString(HEADERS_END)
 	result.Write(response.body)
@@ -77,6 +77,7 @@ func get_content_type(extension string) string{
 }
 
 func (server *Server) set_headers(request *http_request, response *http_response){
+	response.headers = map[string] string {}
 	response.headers["Date"] = time.Now().String()
 	response.headers["Server"] = SERVER
 	response.headers["Connection"] = "close"

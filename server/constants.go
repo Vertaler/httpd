@@ -11,7 +11,7 @@ var (
 		"not_found":       {message: "404 NOT FOUND", code: 404},
 		"bad_request":     {message: "400 BAD REQUEST", code: 400},
 		"forbidden":       {message: "403 FORBIDDEN", code: 403},
-		"not_implemented": {message: "501 NOT IMPLEMENTED", code: 501},
+		"not_implemented": {message: "405 NOT IMPLEMENTED", code: 405},//TODO исправить описание
 		"not_supports":    {message: "505 HTTP VERSION NOT SUPPORTED", code: 505},
 	}
 	IMPLEMENTED_METHODS        = []string{

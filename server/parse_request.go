@@ -19,17 +19,18 @@ func (request *http_request) set_path(new_path string ){
 	request.request_url.Path = new_path
 }
 func (server *Server) parse_request(request string) (*http_request, bool) {
+	//TODO исправить парсинг
 	parsed_request := http_request{}
 	end_of_first_string := strings.Index(request, STRING_SEPARATOR)
 	end_of_headers := strings.Index(request, HEADERS_END)
 	if end_of_first_string < 0 || end_of_headers < 0 {
-		return nil, false
+		return &parsed_request, false
 	}
 	start_string := request[0:end_of_first_string]
 	parsed_request.headers = request[end_of_first_string+len(STRING_SEPARATOR) : end_of_headers]
 	parsed_request.body = request[end_of_headers+len(HEADERS_END):]
 	if ok := server.parse_start_string(start_string, &parsed_request); !ok {
-		return nil, false
+		return &parsed_request, false
 	}
 	return &parsed_request, true
 }
