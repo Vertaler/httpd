@@ -5,6 +5,8 @@ import (
 	"./tcp_server"
 	"flag"
 	"runtime"
+	"time"
+	"fmt"
 )
 
 func main() {
@@ -15,4 +17,11 @@ func main() {
 	factory := handler.CreateFactory(root_dir, log_enable)
 	server := tcp_server.CreateServer(cpunum, address, factory)
 	server.Start()
+	timer := time.NewTicker(time.Second)
+	go func(){
+		for{
+			<- timer.C
+			fmt.Println(runtime.NumGoroutine())
+		}
+	}()
 }

@@ -6,6 +6,8 @@ import (
 	"runtime"
 )
 
+var connection_count int = 0
+var gc_count int = 0
 type Server struct {
 	cpu_num int
 	address string
@@ -36,12 +38,20 @@ func (server *Server) Start() {
 		return
 	}
 	for {
+		connection_count ++
+		//if connection_count % 20000 == 0{
+		//	runtime.GC()
+		//}
 		connection, err := listener.Accept()
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 		handler := server.factory.CreateHandler(connection)
+		runtime.SetFinalizer(handler, func(a AbstractHandler) {
+			gc_count ++
+			fmt.Println(gc_count)
+		})
 		go handler.Handle()
 	}
 }

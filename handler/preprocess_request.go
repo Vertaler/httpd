@@ -4,6 +4,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"strconv"
 )
 
 func (handler *http_handler) check_path(is_dir bool) os.FileInfo {
@@ -30,9 +31,19 @@ func (handler *http_handler) preprocess_path() {
 	file_info := handler.check_path(false)
 	if file_info != nil && file_info.IsDir() {
 		handler.set_path(handler.get_path() + INDEX_FILE)
-		handler.check_path(true)
+		file_info = handler.check_path(true)
 	}
+	handler.set_content_headers(file_info)
 }
+func (handler *http_handler)set_content_headers(info os.FileInfo) {
+	if handler.response.is_ok(){
+		handler.set_header("Content-Length", strconv.Itoa(int(info.Size()) ))
+		handler.set_header("Content-Type", handler.get_content_type() )
+	} else{
+		handler.set_header("Content-Length", strconv.Itoa(len(handler.get_error_body())))
+		handler.set_header("Content-Type", ERROR_BODY_MIME_TYPE )
+	}
+}//set Content-Type and Content-Length
 func contains(arr []string, value string) bool {
 	for _, elem := range arr {
 		if elem == value {
@@ -41,14 +52,27 @@ func contains(arr []string, value string) bool {
 	}
 	return false
 }
-
+func (handler *http_handler)get_content_type() string {
+	extension := ""
+	path := handler.get_path()
+	last_dot := strings.LastIndex(path, ".")
+	if last_dot >= 0{
+		extension = path[last_dot:]
+	}
+	val, ok := CONTENT_TYPES[extension]
+	if ok {
+		return val
+	} else {
+		return "text/html"
+	}
+}
 func (handler *http_handler) preprocess_request() {
 	if !handler.response.is_ok() { //TODO
 		return
 	}
 	//request_path := server.Root + request.request_url.Path
 	if !contains(IMPLEMENTED_METHODS, handler.request.method) {
-		handler.set_status("not_implemented")
+		handler.set_status("method_not_allowed")
 	} else {
 		handler.preprocess_path()
 	}

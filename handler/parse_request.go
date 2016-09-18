@@ -2,7 +2,6 @@ package handler
 
 import (
 	"bytes"
-	"fmt"
 	"net/url"
 	"strings"
 )
@@ -23,8 +22,7 @@ func (handler *http_handler) parse_request() {
 	buffer := make([]byte, 1024)
 	_, err := handler.connection.Read(buffer)
 	if err != nil {
-		handler.log("Read socket fail")
-		fmt.Println(err)
+		handler.log("Read socket fail ", err)
 	}
 	raw_request := string(buffer[:bytes.Index(buffer, []byte{0})])
 	start_string := raw_request
