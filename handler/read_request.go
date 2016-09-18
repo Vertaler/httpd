@@ -17,8 +17,7 @@ func safe_slice(str string, begin int, end int) string {
 	return str[begin:end]
 }
 
-func (handler *http_handler) parse_request() {
-	//TODO исправить парсинг
+func (handler *http_handler) read_request() {
 	buffer := make([]byte, 1024)
 	_, err := handler.connection.Read(buffer)
 	if err != nil {

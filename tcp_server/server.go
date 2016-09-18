@@ -1,28 +1,29 @@
 package tcp_server
 
 import (
-	"net"
 	"fmt"
+	"net"
 	"runtime"
 )
 
 var connection_count int = 0
 var gc_count int = 0
+
 type Server struct {
 	cpu_num int
 	address string
-	factory handler_factory
+	factory handler_creator
 }
 
 type AbstractHandler interface {
 	Handle()
 }
 
-type handler_factory interface {
+type handler_creator interface {
 	CreateHandler(net.Conn) AbstractHandler
 }
 
-func CreateServer(cpunum int, address string, factory handler_factory) *Server {
+func CreateServer(cpunum int, address string, factory handler_creator) *Server {
 	server := Server{}
 	server.address = address
 	server.cpu_num = cpunum
@@ -38,20 +39,12 @@ func (server *Server) Start() {
 		return
 	}
 	for {
-		connection_count ++
-		//if connection_count % 20000 == 0{
-		//	runtime.GC()
-		//}
 		connection, err := listener.Accept()
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 		handler := server.factory.CreateHandler(connection)
-		runtime.SetFinalizer(handler, func(a AbstractHandler) {
-			gc_count ++
-			fmt.Println(gc_count)
-		})
 		go handler.Handle()
 	}
 }

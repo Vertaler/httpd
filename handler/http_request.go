@@ -11,9 +11,9 @@ type http_request struct {
 }
 
 func (request *http_request) get_path() string {
-	if(request.request_url != nil) {
+	if request.request_url != nil {
 		return request.request_url.Path
-	}else {
+	} else {
 		return ""
 	}
 }
