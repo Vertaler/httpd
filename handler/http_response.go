@@ -5,7 +5,6 @@ type http_status struct {
 	code    int
 }
 type http_response struct {
-	body    []byte
 	headers map[string]string
 	status  *http_status
 }

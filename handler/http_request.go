@@ -3,11 +3,8 @@ package handler
 import "net/url"
 
 type http_request struct {
-	headers      string
-	method       string
-	body         string
-	http_version string
-	request_url  *url.URL
+	method      string
+	request_url *url.URL
 }
 
 func (request *http_request) get_path() string {
