@@ -3,12 +3,11 @@ package tcp_server
 import (
 	"fmt"
 	"net"
-	"runtime"
 )
 
-
 type Server struct {
-	address string
+	port    string
+	host    string
 	factory handler_creator
 }
 
@@ -20,15 +19,17 @@ type handler_creator interface {
 	CreateHandler(net.Conn) AbstractHandler
 }
 
-func CreateServer(address string, factory handler_creator) *Server {
+func CreateServer(port string, host string, factory handler_creator) *Server {
 	server := Server{}
-	server.address = address
+	server.port = port
+	server.host = host
 	server.factory = factory
 	return &server
 }
 func (server *Server) Start() {
-	fmt.Println("Start server on address " + server.address)
-	listener, err := net.Listen("tcp", server.address)
+	address := server.host + ":" + server.port
+	fmt.Println("Start server on  " + address)
+	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		fmt.Println("Start server failed ", err)
 		return

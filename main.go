@@ -4,19 +4,20 @@ import (
 	"./handler"
 	"./tcp_server"
 	"flag"
-	"runtime"
 	"fmt"
+	"runtime"
 )
 
 func main() {
 	cpunum := flag.Int("c", runtime.NumCPU(), "-c NCPU")
-	address := flag.String("a", "localhost:8080", "-a HOST:PORT")
+	port := flag.String("p", "8080", "-p PORT")
+	host := flag.String("h", "localhost", "-h HOST")
 	root_dir := flag.String("r", "../../http-test-suite-master", "-r ROOTDIR")
 	log_enable := flag.Bool("l", false, "-l")
 	flag.Parse()
 	fmt.Println("Num cpu: ", *cpunum)
 	runtime.GOMAXPROCS(*cpunum)
 	factory := handler.CreateFactory(*root_dir, *log_enable)
-	server := tcp_server.CreateServer(*address, factory)
+	server := tcp_server.CreateServer(*port, *host, factory)
 	server.Start()
 }
